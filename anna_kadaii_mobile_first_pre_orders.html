@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Anna Kadaii - Pre-order Homely Biriyani</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'serif'],
+                        sans: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            cream: '#FFF9F0',      
+                            terracotta: '#D9534F', 
+                            terracottaDark: '#C13F3A',
+                            leaf: '#4A7C59',       
+                            mud: '#4A3B32',        
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(74, 59, 50, 0.1)',
+                        'up': '0 -4px 20px -5px rgba(74, 59, 50, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { 
+            background-color: #FFF9F0; 
+            color: #4A3B32;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Hide scrollbar for cleaner mobile look */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        
+        .slide-panel {
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .panel-open { transform: translateX(0); }
+        .panel-closed { transform: translateX(100%); }
+        
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="font-sans antialiased pb-24 md:pb-0">
+
+    <header class="fixed top-0 left-0 right-0 bg-brand-cream/95 backdrop-blur-md z-40 border-b border-brand-mud/10 shadow-sm">
+        <div class="max-w-3xl mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 md:w-10 md:h-10 bg-brand-terracotta text-white rounded-full flex items-center justify-center shadow-md">
+                    <i class="fa-solid fa-bowl-rice text-sm md:text-base"></i>
+                </div>
+                <h1 class="font-serif font-bold text-2xl md:text-3xl text-brand-mud tracking-tight">Anna Kadaii</h1>
+            </div>
+
+            <button onclick="toggleCart()" class="relative p-2 text-brand-mud hover:text-brand-terracotta transition-colors active:scale-95">
+                <i class="fa-solid fa-basket-shopping text-xl md:text-2xl"></i>
+                <span id="cart-badge-header" class="absolute top-0 right-0 bg-brand-leaf text-white text-[10px] md:text-xs font-bold w-4 h-4 md:w-5 md:h-5 flex items-center justify-center rounded-full shadow-md hidden">0</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="pt-24 md:pt-32 pb-10 px-4 max-w-3xl mx-auto">
+        <div class="text-center mb-8">
+            <span class="inline-block py-1.5 px-4 bg-brand-leaf/10 text-brand-leaf rounded-full text-sm font-bold tracking-wide uppercase mb-4 border border-brand-leaf/20">
+                <i class="fa-regular fa-clock mr-1"></i> Pre-order for Tomorrow
+            </span>
+            <h2 class="text-3xl md:text-5xl font-serif font-bold text-brand-mud mb-3 leading-tight">
+                Authentic South Indian Comfort.
+            </h2>
+            <p class="text-base md:text-lg text-brand-mud/80 max-w-lg mx-auto font-medium">
+                Reserve your freshly cooked biriyani today, delivered warm to your door between 11 AM and 1 PM tomorrow.
+            </p>
+        </div>
+
+        <!-- STRICT IMAGE REQUIREMENT -->
+        <img src="pexels-drmkhawarnazir-35552983.jpg" alt="Delicious Biriyani" class="w-full h-56 md:h-80 object-cover rounded-2xl shadow-lg mb-10 border border-brand-mud/5" />
+
+        <div class="mb-6 flex items-center justify-between">
+            <h3 class="text-2xl font-serif font-bold text-brand-mud">Tomorrow's Menu</h3>
+            <div class="h-px flex-1 bg-brand-mud/10 ml-4"></div>
+        </div>
+        
+        <div id="menu-container" class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+            <!-- Menu items injected via JS -->
+        </div>
+    </main>
+
+    <div id="mobile-sticky-cart" class="fixed bottom-0 left-0 right-0 bg-white border-t border-brand-mud/10 p-4 shadow-up z-30 transform translate-y-full transition-transform duration-300 flex md:hidden items-center justify-between">
+        <div>
+            <div class="text-xs text-brand-mud/60 font-bold uppercase tracking-wide">Tomorrow's Order</div>
+            <div class="font-serif font-bold text-lg text-brand-mud">
+                <span id="sticky-items-count">0</span> items | <span id="sticky-total" class="text-brand-terracotta">₹0</span>
+            </div>
+        </div>
+        <button onclick="toggleCart()" class="bg-brand-leaf hover:bg-brand-leaf/90 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md active:scale-95 transition-transform flex items-center gap-2">
+            View Basket <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </div>
+
+    <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-brand-mud/60 backdrop-blur-sm z-50 hidden transition-opacity duration-300"></div>
+    
+    <aside id="cart-sidebar" class="fixed top-0 right-0 h-[100dvh] w-full md:w-[400px] bg-brand-cream shadow-2xl z-50 slide-panel panel-closed flex flex-col md:rounded-l-[2rem]">
+        <div class="px-5 py-4 border-b border-brand-mud/10 flex items-center justify-between bg-white md:rounded-tl-[2rem] shadow-sm z-10">
+            <div>
+                <h3 class="text-xl font-serif font-bold text-brand-mud">Your Basket</h3>
+                <p class="text-xs text-brand-leaf font-bold"><i class="fa-regular fa-clock"></i> Delivery Tomorrow (11 AM - 1 PM)</p>
+            </div>
+            <button onclick="toggleCart()" class="w-10 h-10 rounded-full bg-brand-cream text-brand-mud hover:bg-brand-terracotta hover:text-white transition-colors flex items-center justify-center text-lg shadow-sm">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div id="cart-items" class="flex-1 overflow-y-auto p-5 space-y-3 pb-32">
+            <!-- Items injected via JS -->
+        </div>
+
+        <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-brand-mud/10 p-5 shadow-up z-10">
+            <div class="mb-4 hidden" id="note-container">
+                <input type="text" id="customer-note" class="w-full px-4 py-3 bg-brand-cream border border-brand-mud/20 rounded-xl focus:border-brand-leaf outline-none transition-all text-sm placeholder:text-brand-mud/40" placeholder="Any special requests? (e.g., Less spicy)">
+            </div>
+
+            <div class="space-y-1 mb-4 text-sm font-medium">
+                <div class="flex justify-between text-brand-mud/70">
+                    <span>Subtotal</span>
+                    <span id="cart-subtotal">₹0</span>
+                </div>
+                <div class="flex justify-between text-brand-mud/70">
+                    <span>Delivery (Tomorrow)</span>
+                    <span id="cart-delivery">₹30</span>
+                </div>
+                <div class="border-t border-brand-mud/10 pt-2 mt-2 flex justify-between items-end">
+                    <span class="text-brand-mud font-bold text-base">Total to Pay</span>
+                    <span id="cart-total" class="text-2xl font-serif font-bold text-brand-terracotta">₹0</span>
+                </div>
+            </div>
+
+            <button id="checkout-btn" onclick="openRazorpayModal()" class="w-full bg-brand-leaf text-white py-4 rounded-xl font-bold text-lg shadow-lg active:scale-[0.98] transition-transform disabled:opacity-50 disabled:active:scale-100 flex justify-center items-center gap-2" disabled>
+                Pre-order Now <i class="fa-solid fa-lock text-sm opacity-80"></i>
+            </button>
+        </div>
+    </aside>
+
+    <div id="razorpay-modal" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-white p-6 md:p-8 rounded-3xl max-w-sm w-full shadow-2xl relative fade-in">
+            <button onclick="closeRazorpayModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <div class="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+                    <i class="fa-solid fa-building-columns"></i>
+                </div>
+                <h3 class="font-bold text-gray-800 text-xl">Razorpay Secure</h3>
+                <p class="text-sm text-gray-500 mt-1">Simulated Checkout Environment</p>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-2xl mb-6 border border-gray-200">
+                <div class="flex justify-between items-center mb-3 pb-3 border-b border-gray-200">
+                    <span class="text-gray-600 text-sm font-medium">Pre-order Total:</span>
+                    <span class="font-bold text-gray-900 text-lg" id="rzp-amount">₹0</span>
+                </div>
+                <div class="text-xs text-gray-500 flex flex-col gap-1">
+                    <span class="font-bold uppercase tracking-wide text-gray-400">Customer Note:</span>
+                    <span id="rzp-notes" class="italic text-gray-600 break-words">None</span>
+                </div>
+            </div>
+
+            <button id="rzp-pay-btn" onclick="simulatePayment()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform flex justify-center items-center gap-2">
+                Complete Payment
+            </button>
+        </div>
+    </div>
+
+    <div id="success-modal" class="fixed inset-0 bg-brand-cream z-[110] hidden flex-col items-center justify-center p-6 text-center">
+        <div class="max-w-md w-full fade-in">
+            <!-- Animated Success Icon -->
+            <div class="relative w-28 h-28 mx-auto mb-8">
+                <div class="absolute inset-0 bg-brand-leaf/20 rounded-full animate-ping opacity-75"></div>
+                <div class="relative w-full h-full bg-brand-leaf text-white rounded-full flex items-center justify-center text-5xl shadow-xl border-4 border-white">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+            </div>
+            
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-brand-mud mb-4">Payment Successful!</h2>
+            
+            <!-- Exact requested text -->
+            <div class="bg-white p-6 rounded-2xl shadow-soft border border-brand-mud/10 mb-8">
+                <p class="text-lg md:text-xl font-medium text-brand-mud/90 leading-relaxed">
+                    Congratulations you placed the order and your order will reach from 11am to 1 pm tomorrow.
+                </p>
+            </div>
+            
+            <button onclick="returnHome()" class="w-full bg-brand-terracotta text-white font-bold py-4 rounded-xl shadow-lg hover:bg-brand-terracottaDark active:scale-95 transition-all text-lg">
+                Return to Home
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const DELIVERY_FEE = 30;
+        
+        const menuItems = [
+            { 
+                id: 1, 
+                name: "Mushroom Biriyani Combo", 
+                price: 300,
+                desc: "Fragrant basmati rice cooked with fresh mushrooms. Includes raita, salan (curry), and sweet of the day."
+            },
+            { 
+                id: 2, 
+                name: "Soya Biriyani Combo", 
+                price: 300,
+                desc: "Protein-rich soya chunks in traditional spices. Includes raita, salan (curry), and sweet of the day."
+            }
+        ];
+
+        let cart = [];
+
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = menuItems.map(item => `
+                <div class="bg-white rounded-3xl p-5 md:p-6 shadow-soft border border-brand-mud/5 flex flex-col h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-brand-terracotta text-white text-xs font-bold px-3 py-1 rounded-bl-xl shadow-sm">
+                        Pre-order
+                    </div>
+                    <div class="flex justify-between items-start mb-3 mt-2">
+                        <h4 class="text-xl font-bold font-serif text-brand-mud pr-4">${item.name}</h4>
+                        <span class="text-brand-terracotta font-bold text-xl whitespace-nowrap">₹${item.price}</span>
+                    </div>
+                    <p class="text-brand-mud/70 text-sm md:text-base mb-6 flex-1 leading-relaxed">
+                        ${item.desc}
+                    </p>
+                    <button onclick="addToCart(${item.id})" class="w-full bg-brand-cream hover:bg-brand-leaf border border-brand-leaf/20 text-brand-leaf hover:text-white py-3.5 md:py-4 rounded-xl font-bold transition-all active:scale-95 flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-plus text-sm"></i> Add to Pre-order
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            const item = menuItems.find(i => i.id === id);
+            const existing = cart.find(i => i.id === id);
+            
+            if(existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            updateCartUI();
+            
+            // Auto open cart on desktop, just show sticky bar on mobile
+            if(window.innerWidth > 768) {
+                if(document.getElementById('cart-sidebar').classList.contains('panel-closed')){
+                    toggleCart();
+                }
+            }
+        }
+
+        function changeQuantity(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if(item) {
+                item.quantity += delta;
+                if(item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                }
+                updateCartUI();
+            }
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items');
+            const badge = document.getElementById('cart-badge-header');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            const noteContainer = document.getElementById('note-container');
+            const mobileSticky = document.getElementById('mobile-sticky-cart');
+            
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const finalTotal = subtotal > 0 ? subtotal + DELIVERY_FEE : 0;
+
+            // Update header badge
+            if(totalItems > 0) {
+                badge.innerText = totalItems;
+                badge.classList.remove('hidden');
+                noteContainer.classList.remove('hidden');
+                
+                // Show sticky mobile bar
+                mobileSticky.classList.remove('translate-y-full');
+                document.getElementById('sticky-items-count').innerText = totalItems;
+                document.getElementById('sticky-total').innerText = `₹${finalTotal}`;
+            } else {
+                badge.classList.add('hidden');
+                noteContainer.classList.add('hidden');
+                mobileSticky.classList.add('translate-y-full');
+            }
+
+            if(cart.length === 0) {
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-brand-mud/30 mt-12">
+                        <div class="w-20 h-20 bg-brand-mud/5 rounded-full flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-basket-shopping text-3xl"></i>
+                        </div>
+                        <p class="font-medium text-brand-mud/50">Your pre-order basket is empty</p>
+                    </div>
+                `;
+                checkoutBtn.disabled = true;
+                document.getElementById('cart-subtotal').innerText = `₹0`;
+                document.getElementById('cart-delivery').innerText = `₹0`;
+                document.getElementById('cart-total').innerText = `₹0`;
+            } else {
+                checkoutBtn.disabled = false;
+                container.innerHTML = cart.map(item => `
+                    <div class="flex gap-3 items-center bg-white p-3 md:p-4 rounded-2xl border border-brand-mud/10 shadow-sm">
+                        <div class="flex-1">
+                            <div class="font-bold text-brand-mud text-sm md:text-base leading-tight">${item.name}</div>
+                            <div class="text-brand-terracotta font-bold text-sm mt-1">₹${item.price}</div>
+                        </div>
+                        <div class="flex items-center gap-3 bg-brand-cream rounded-xl px-2 py-1.5 border border-brand-mud/5">
+                            <button onclick="changeQuantity(${item.id}, -1)" class="w-8 h-8 flex items-center justify-center text-brand-mud/60 hover:text-brand-terracotta hover:bg-white rounded-lg transition-colors active:scale-95"><i class="fa-solid fa-minus text-xs"></i></button>
+                            <span class="text-sm font-bold w-4 text-center">${item.quantity}</span>
+                            <button onclick="changeQuantity(${item.id}, 1)" class="w-8 h-8 flex items-center justify-center text-brand-mud/60 hover:text-brand-leaf hover:bg-white rounded-lg transition-colors active:scale-95"><i class="fa-solid fa-plus text-xs"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                document.getElementById('cart-subtotal').innerText = `₹${subtotal}`;
+                document.getElementById('cart-delivery').innerText = `₹${DELIVERY_FEE}`;
+                document.getElementById('cart-total').innerText = `₹${finalTotal}`;
+            }
+        }
+
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            const overlay = document.getElementById('cart-overlay');
+            
+            if(sidebar.classList.contains('panel-closed')) {
+                sidebar.classList.remove('panel-closed');
+                sidebar.classList.add('panel-open');
+                overlay.classList.remove('hidden');
+                overlay.classList.add('block');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling on mobile
+            } else {
+                sidebar.classList.remove('panel-open');
+                sidebar.classList.add('panel-closed');
+                overlay.classList.add('hidden');
+                overlay.classList.remove('block');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function openRazorpayModal() {
+            const totalText = document.getElementById('cart-total').innerText;
+            const notes = document.getElementById('customer-note').value.trim();
+            
+            document.getElementById('rzp-amount').innerText = totalText;
+            document.getElementById('rzp-notes').innerText = notes ? `"${notes}"` : "None";
+            
+            toggleCart();
+            document.getElementById('razorpay-modal').classList.remove('hidden');
+            document.getElementById('razorpay-modal').classList.add('flex');
+        }
+
+        function closeRazorpayModal() {
+            document.getElementById('razorpay-modal').classList.add('hidden');
+            document.getElementById('razorpay-modal').classList.remove('flex');
+        }
+
+        function simulatePayment() {
+            const btn = document.getElementById('rzp-pay-btn');
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                closeRazorpayModal();
+                btn.innerHTML = 'Complete Payment';
+                btn.disabled = false;
+                
+                // Show mandatory success screen
+                document.getElementById('success-modal').classList.remove('hidden');
+                document.getElementById('success-modal').classList.add('flex');
+                
+                // Clear cart state behind the scenes
+                cart = [];
+                document.getElementById('customer-note').value = '';
+                updateCartUI();
+                
+            }, 1800);
+        }
+
+        function returnHome() {
+            document.getElementById('success-modal').classList.add('hidden');
+            document.getElementById('success-modal').classList.remove('flex');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMenu();
+            updateCartUI();
+        });
+    </script>
+</body>
+</html>
